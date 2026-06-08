@@ -1,6 +1,6 @@
 ---
 name: infersports
-description: Live football & basketball odds and scores from InferSports — who's favored, the live score, today's matches and what's worth watching, a one-line pre-match brief, one normalized sharp betting line, today's value spots (where a book beats the sharp fair line), odds-format conversion, and finished-match results. Use whenever the user asks about a match, the score, who's winning or favored, kickoff time, what's on or worth watching today, a pre-match preview, a betting line or Asian handicap, where today's value/edges are, odds in another format, or a past result. Read-only; keyless, no account or API key needed.
+description: Live football & basketball odds and scores from InferSports — who's favored, the live score, today's matches and what's worth watching, a specific day's schedule (in your timezone), a one-line pre-match brief, one normalized sharp betting line, the sharp de-vigged fair probability, whether an external prediction-market (Polymarket/Kalshi) price is good vs that fair line, today's value spots (where a book beats the sharp fair line), odds-format conversion, and finished-match results. Use whenever the user asks about a match, the score, who's winning or favored, kickoff time, what's on or worth watching today, the fixtures on a specific day, a pre-match preview, a betting line or Asian handicap, the fair/de-vigged odds, whether a Polymarket/Kalshi price is fair or good, where today's value/edges are, odds in another format, or a past result. Read-only; keyless, no account or API key needed.
 ---
 
 # InferSports odds & scores
@@ -24,29 +24,34 @@ verb and pass arguments. Each prints a compact, ready-to-read line. If a script 
 InferSports is **read-only and never recommends a bet — and neither do you when relaying it.** Give the
 line / score / odds / value exactly as the script printed them. Do **NOT** add a pick of your own, a
 lean, "best play", "I'd take…", or any betting suggestion — **even if the user asks "should I bet?" or
-"which bet?"** For those, give the data and a plain "the call is yours." `scan.sh` and `line.sh` surface
-where a book beats the sharp **de-vigged fair** line — that detected edge is *information* (detection
-only), so relay it as printed, but never turn it into advice or a recommended side.
+"which bet?"** For those, give the data and a plain "the call is yours." `scan.sh`, `line.sh` and
+`compare.sh` surface where a price beats the sharp **de-vigged fair** line — that detected edge is
+*information* (detection only), so relay it as printed, but never turn it into advice or a recommended side.
 
-## The eight verbs
-Run from this skill's directory. All read-only and safe to repeat. Three **package several reads into one
-ready-to-read answer**: `preview.sh` (one-match brief), `digest.sh` (today's highlights) and `scan.sh`
-(today's value) — the fan-out happens for you; you get a capped, concise result.
+## The eleven verbs
+Run from this skill's directory. All read-only and safe to repeat. Several **package several reads into one
+ready-to-read answer**: `preview.sh` (one-match brief), `digest.sh` (today's highlights), `scan.sh`
+(today's value) and `compare.sh` (judge an external price) — the fan-out / de-vig happens for you; you get
+a capped, concise result.
 
 | The user asks… | Run |
 |---|---|
 | What games are on today? | `scripts/today.sh [--sport football\|basketball] [--status live\|scheduled\|finished] [--tz Asia/Shanghai] [--limit N]` |
+| What's on a specific day? / this Friday / June 12 in my timezone | `scripts/events.sh --date YYYY-MM-DD [--tz Asia/Shanghai] [--sport football\|basketball] [--status live\|scheduled\|finished] [--limit N]` |
 | What's worth watching today? / today's highlights | `scripts/digest.sh [--sport football\|basketball] [--limit N(<=12)] [--status live\|scheduled\|finished]` |
 | Who's favored? / What's the score? / When do they play? | `scripts/match.sh "<team, A vs B, or evt_… id>" [--tz Asia/Shanghai]` |
 | A quick pre-match brief (favored + sharp line + kickoff, one line) | `scripts/preview.sh "<team, A vs B, or evt_… id>" [--tz Asia/Shanghai] [--sport] [--date YYYY-MM-DD]` |
 | What's the sharp line / handicap? | `scripts/line.sh "<team, A vs B, or evt_… id>" [--market asian_handicap\|1x2\|totals] [--format hk\|malay\|…] [--sport] [--date YYYY-MM-DD]` |
+| What's the sharp **fair** (de-vigged) probability? / the reference to check a price against | `scripts/fair.sh "<team, A vs B, or evt_… id>" [--market 1x2\|asian_handicap\|totals] [--period] [--sport] [--date]` |
+| Is my Polymarket/Kalshi (external) price good? / is this prediction-market price fair? | `scripts/compare.sh "<team, A vs B, or evt_… id>" --prob <0..1> [--outcome home\|draw\|away\|over\|under] [--market 1x2\|asian_handicap\|totals] [--label polymarket]` |
 | Where's the value today? / today's edges | `scripts/scan.sh [--sport football\|basketball] [--market 1x2\|asian_handicap\|totals] [--min-edge PCT] [--limit N] [--status live\|scheduled\|finished]` |
 | Convert odds / explain a handicap | `scripts/convert.sh <value> <from> <to[,to2,…]>`  ·  `scripts/convert.sh --handicap -0.75` |
 | What was the score of a finished match? | `scripts/result.sh "<team>" [--date YYYY-MM-DD]`  ·  `scripts/result.sh --id evt_…` |
 
 ## How to chain them (cheaply)
-1. Broad question ("what's on today?") → `today.sh`. Returns **one line per match, capped**, each
-   starting with an `evt_…` id.
+1. Broad question ("what's on today?") → `today.sh`; a **specific day** ("what's on June 12?",
+   "this Friday") → `events.sh --date YYYY-MM-DD` (add `--tz` so the day is your local day, not UTC).
+   Both return **one line per match, capped**, each starting with an `evt_…` id.
 2. Drill into ONE match → `match.sh` (casual: score/favored) or `line.sh` (betting). Pass **either** the
    team name **or** the `evt_…` id straight from `today.sh` — both work (the id is resolved for you).
    If a *name* is ambiguous (senior vs U21, two same-day fixtures), pin it with `--date YYYY-MM-DD`
@@ -80,8 +85,21 @@ scripts/scan.sh --sport football --market asian_handicap --min-edge 1 --limit 5
 #   evt_… | A v B | sbobet AH -1 home @2.14 | fair 2.08 | +2.9% | scheduled
 #   Detection only — the edge is information, not a pick.
 
+scripts/compare.sh "France vs Argentina" --prob 0.52 --outcome home --label polymarket
+# → France v Argentina — 1x2 home: sharp fair 55.6% vs polymarket 52.0% → +3.6pp (ROI +6.9%) · GOOD · de-vig pinnacle/power
+#   ⚠ 1x2 fair = regulation 90-min … (caveats) ;  Detection only — the call is yours.
+#   (You pre-net the prediction-market price for its fee/spread; we never ingest that data.)
+
+scripts/fair.sh "France vs Argentina"
+# → France v Argentina — sharp fair (1x2): home 55.6% / draw 28.2% / away 22.5% · de-vig pinnacle
+
 scripts/today.sh --status live --sport football --limit 15
 scripts/result.sh "Myanmar" --date 2026-06-06
+
+scripts/events.sh --date 2026-06-12 --tz Asia/Shanghai --sport football
+# → Events 2026-06-12 (Asia/Shanghai) — 2 shown
+#   evt_… | Mexico vs South Africa — Kicks off 03:00 Asia/Shanghai on Jun 12.
+#   evt_… | Korea Republic vs Czechia — Kicks off 10:00 Asia/Shanghai on Jun 12.
 ```
 
 ## Reading the output
@@ -97,7 +115,7 @@ scripts/result.sh "Myanmar" --date 2026-06-06
 ## What this skill does NOT do
 It wraps the **highest-frequency** reads plus two packaged scans (`preview.sh`, `scan.sh`). For
 **arbitrage** detection, opening-line (初盘) movement, full **per-book** breakdowns, or the bookmaker
-catalogue, see [`references/full-api.md`](references/full-api.md) — the full REST docs and the 14-tool
+catalogue, see [`references/full-api.md`](references/full-api.md) — the full REST docs and the 16-tool
 MCP server. (`scan.sh` already gives today's **value** top-N; the full API adds per-book depth and arb.)
 **InferSports is informational and read-only — it never places, recommends, or sizes a bet.**
 

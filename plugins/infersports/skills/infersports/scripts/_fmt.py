@@ -29,6 +29,18 @@ def fmt_today(d, a):
         print(f"… first {a.limit} only — more exist. Narrow with --sport/--status/--league, or use `match <team>`.")
 
 
+def fmt_events(d, a):
+    matches = d.get("matches", [])
+    tz = d.get("timezone")
+    head = f"{d.get('date', '?')}" + (f" ({tz})" if tz else " (UTC)")
+    print(f"Events {head} — {len(matches)} shown")
+    for m in matches:
+        line = m.get("summary") or f"{m.get('home_team', '?')} vs {m.get('away_team', '?')}"
+        print(f"{m.get('event_id', '?')} | {line}")
+    if d.get("truncated"):
+        print(f"… capped at {len(matches)} — more on this day. Narrow with --sport/--status/--league.")
+
+
 def _alts(d, shown=""):
     for alt in d.get("alternatives", []):
         print(f"  {alt.get('event_id', '?')} | {alt.get('label', '?')} ({alt.get('confidence', '?')})")
@@ -207,6 +219,68 @@ def fmt_digest(d, a):
         )
     if len(entries) > n:
         print(f"… {len(entries) - n} more on — raise --limit, or use today.sh for the full list.")
+
+
+def _line_tag(mt, line):
+    if line is None:
+        return ""
+    return f" {line:+g}" if mt == "asian_handicap" else f" {line:g}"
+
+
+def fmt_compare(d, a):
+    # is an external (prediction-market) probability good vs our sharp de-vigged fair line?
+    status = d.get("status")
+    if status != "ok":
+        print(d.get("summary") or status or "?")
+        if status == "ambiguous":
+            _alts(d, d.get("summary", ""))
+        return
+    m = d.get("match") or {}
+    mt = d.get("market_type", "")
+    edge = d.get("edge_pp")
+    edge_s = f"{edge:+g}pp" if edge is not None else "?"
+    roi = d.get("ev_roi")
+    roi_s = f" (ROI {roi:+.1%})" if isinstance(roi, (int, float)) else ""
+    verdict = (d.get("verdict") or "").replace("_", " ").upper()
+    label = d.get("external_label") or "your"
+    src = d.get("fair_from")
+    method = d.get("devig_method")
+    src_s = (f" · de-vig {src}" + (f"/{method}" if method else "")) if src else ""
+    print(
+        f"{m.get('home_team', '?')} v {m.get('away_team', '?')} — "
+        f"{_MKT.get(mt, mt)}{_line_tag(mt, d.get('line'))} {d.get('outcome', '?')}: "
+        f"sharp fair {pct(d.get('fair_prob'))} vs {label} {pct(d.get('external_prob'))} "
+        f"→ {edge_s}{roi_s} · {verdict}{src_s}"
+    )
+    for c in d.get("caveats", []):
+        print(f"  ⚠ {c}")
+    print("Detection only — the edge is information, not a pick. The call is yours.")
+
+
+def fmt_fair(d, a):
+    # the sharp de-vigged fair line as probabilities — the reference a PM/cross-venue trader checks against.
+    status = d.get("status")
+    if status != "ok":
+        print(d.get("summary") or status or "?")
+        if status == "ambiguous":
+            _alts(d, d.get("summary", ""))
+        return
+    m = d.get("match") or {}
+    comp = d.get("comparison") or {}
+    fair = comp.get("fair_odds") or {}
+    mt = comp.get("market_type", "")
+    head = f"{m.get('home_team', '?')} v {m.get('away_team', '?')}"
+    if not fair:
+        print(f"{head} — no sharp {mt or 'fair'} line right now (try another market/period or a key with more books).")
+        return
+    legs = " / ".join(f"{k} {pct(1.0 / v)}" for k, v in fair.items() if v)
+    tail = []
+    if comp.get("fair_from"):
+        tail.append(f"de-vig {comp['fair_from']}")
+    if comp.get("stale"):
+        tail.append("stale — confirm")
+    tail_s = " · " + " · ".join(tail) if tail else ""
+    print(f"{head} — sharp fair ({_MKT.get(mt, mt)}{_line_tag(mt, comp.get('consensus_line'))}): {legs}{tail_s}")
 
 
 def main():

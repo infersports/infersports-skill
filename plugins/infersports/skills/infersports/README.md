@@ -3,17 +3,19 @@
 A lightweight, **portable** Agent Skill wrapping the InferSports REST API — live football &
 basketball odds + scores for small-context / on-device agents. **Read-only, keyless.**
 
-Eight verbs as bundled scripts — `today` / `digest` / `match` / `preview` / `line` / `scan` /
-`convert` / `result` — the agent picks a verb and passes args; each prints one concise line
-(`digest` / `preview` / `scan` package several reads into one). The agent never builds a URL. See
-`SKILL.md` for the full contract.
+Eleven verbs as bundled scripts — `today` / `events` / `digest` / `match` / `preview` / `line` /
+`fair` / `compare` / `scan` / `convert` / `result` — the agent picks a verb and passes args; each
+prints one concise line (`digest` / `preview` / `scan` / `compare` package several reads / a de-vig
+into one). `events` lists a specific day's schedule (timezone-aware), `today` lists today + live.
+`fair` gives the sharp de-vigged fair probability; `compare` judges an external (e.g. Polymarket/Kalshi)
+price against it. The agent never builds a URL. See `SKILL.md` for the full contract.
 
 ## Layout
 - `SKILL.md` — the **agent-facing contract** (name + description always loaded; body read when a
   question matches).
 - `scripts/` — one bash script per verb + `_common.sh` (HTTP/config) + `_fmt.py` (concise formatter).
-- `references/full-api.md` — long-tail pointer (the full 14-tool MCP / REST surface) for asks beyond
-  the eight verbs.
+- `references/full-api.md` — long-tail pointer (the full 16-tool MCP / REST surface) for asks beyond
+  the eleven verbs.
 - `fixtures/` — offline mock payloads (`INFERSPORTS_MOCK=1`).
 
 ## Install

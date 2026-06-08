@@ -1,8 +1,8 @@
 # InferSports — full API (the long tail this skill doesn't wrap)
 
-The [`infersports`](../SKILL.md) skill wraps the eight highest-frequency verbs (today / digest / match
-/ preview / line / scan / convert / result). Everything below is the same read-only API — reach for it
-when a request falls outside those eight.
+The [`infersports`](../SKILL.md) skill wraps the eleven highest-frequency verbs (today / events /
+digest / match / preview / line / fair / compare / scan / convert / result). Everything below is the
+same read-only API — reach for it when a request falls outside those eleven.
 
 ## Two ways in
 - **REST** — base `https://api.infersports.dev`, keyless Free tier.
@@ -10,12 +10,14 @@ when a request falls outside those eight.
   agent map: https://api.infersports.dev/llms.txt (full appendix: `/llms-full.txt`).
 - **Remote MCP** (for MCP-capable hosts) — one line:
   `claude mcp add --transport http infersports https://api.infersports.dev/mcp`
-  (keyless Free tier, 14 tools).
+  (keyless Free tier, 16 tools).
 
-## The full 14-tool surface — POST `/v1/mcp/<tool>`, JSON body
-**Wrapped by this skill already:** `list_today_matches` (today.sh), `scan_slate` (scan.sh = today's
-value top-N; digest.sh = today's highlights), `match_info` (match.sh; also preview.sh), `get_sharp_line`
-(line.sh; also preview.sh), `convert/odds` + `convert/handicap`/`explain_handicap` (convert.sh),
+## The full 16-tool surface — POST `/v1/mcp/<tool>`, JSON body
+**Wrapped by this skill already:** `list_today_matches` (today.sh), `list_events` (events.sh = ONE
+specific day's schedule, timezone-aware), `scan_slate` (scan.sh = today's value top-N; digest.sh =
+today's highlights), `match_info` (match.sh; also preview.sh), `get_sharp_line` (line.sh; fair.sh =
+fair as probabilities; also preview.sh), `compare_prob` (compare.sh = judge an external/prediction-market
+price vs the sharp fair line), `convert/odds` + `convert/handicap`/`explain_handicap` (convert.sh),
 `list_results` + `get_result` / `GET /v1/results` (result.sh).
 
 **The long tail — call REST/MCP directly (NOT in this skill):**

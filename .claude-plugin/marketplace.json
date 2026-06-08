@@ -6,13 +6,13 @@
   },
   "metadata": {
     "description": "InferSports skills — live Asian-priced football & basketball odds and scores, over a read-only keyless REST API.",
-    "version": "1.0.0"
+    "version": "1.1.0"
   },
   "plugins": [
     {
       "name": "infersports",
       "source": "./plugins/infersports",
-      "description": "Live football & basketball odds + scores: who's favored, the live score, today's matches and highlights, a one-line pre-match brief, one normalized sharp line, today's value spots, odds-format conversion, and finished-match results. Read-only, keyless — no account or API key."
+      "description": "Live football & basketball odds + scores: who's favored, the live score, today's matches and a specific day's schedule (timezone-aware), highlights, a one-line pre-match brief, one normalized sharp line, the sharp de-vigged fair probability, whether a Polymarket/Kalshi price is good, today's value spots, odds-format conversion, and finished-match results. Read-only, keyless — no account or API key."
     }
   ]
 }

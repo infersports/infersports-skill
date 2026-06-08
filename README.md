@@ -10,9 +10,11 @@ Ask your agent things like:
 - *What's worth watching today?* · *Give me a one-line preview of France vs Argentina* · *Where's the value on today's slate?*
 - *What games are on today?* · *Convert 2.08 decimal to Hong Kong odds* · *What was the Myanmar result?*
 
-Eight bundled verbs (`today` · `digest` · `match` · `preview` · `line` · `scan` · `convert` · `result`) —
-the agent picks a verb and passes arguments; each prints one concise line (`digest` / `preview` / `scan`
-package several reads into one). The agent never hand-builds an API call.
+Eleven bundled verbs (`today` · `events` · `digest` · `match` · `preview` · `line` · `fair` · `compare` ·
+`scan` · `convert` · `result`) — the agent picks a verb and passes arguments; each prints one concise line
+(`digest` / `preview` / `scan` / `compare` package several reads / a de-vig into one). `events` lists a
+specific day's schedule (timezone-aware); `fair` gives the sharp de-vigged fair probability; `compare`
+judges an external (e.g. Polymarket/Kalshi) price against it. The agent never hand-builds an API call.
 
 ---
 
