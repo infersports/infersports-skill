@@ -44,6 +44,10 @@ Install the "InferSports" sports-odds skill for me, verify it works, then show m
 Read-only & keyless — never needs an account, API key, or payment. Needs bash, curl, python3.
 ```
 
+### No git?
+Swap step 2 of the prompt for: download **https://infersports.dev/skill.tgz** and extract it
+(`tar xzf skill.tgz`) so the `infersports/` folder lands in your skills directory.
+
 ### Requirements
 `bash`, `curl`, `python3` on PATH (already present on macOS/Linux). The skill talks only to the
 public InferSports API at `https://api.infersports.dev`.
