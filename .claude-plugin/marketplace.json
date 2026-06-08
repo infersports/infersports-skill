@@ -1,0 +1,18 @@
+{
+  "name": "infersports",
+  "owner": {
+    "name": "InferSports",
+    "url": "https://infersports.dev"
+  },
+  "metadata": {
+    "description": "InferSports skills — live Asian-priced football & basketball odds and scores, over a read-only keyless REST API.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "infersports",
+      "source": "./plugins/infersports",
+      "description": "Live football & basketball odds + scores: who's favored, the live score, today's matches, one normalized sharp line, odds-format conversion, and finished-match results. Read-only, keyless — no account or API key."
+    }
+  ]
+}

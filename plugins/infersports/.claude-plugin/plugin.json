@@ -1,0 +1,13 @@
+{
+  "name": "infersports",
+  "description": "Live Asian-priced football & basketball odds + scores over the InferSports REST API: who's favored, the score, today's matches, one sharp line, odds conversion, results. Read-only, keyless.",
+  "version": "1.0.0",
+  "author": {
+    "name": "InferSports",
+    "url": "https://infersports.dev"
+  },
+  "homepage": "https://infersports.dev",
+  "repository": "https://github.com/infersports/infersports-skill",
+  "license": "MIT",
+  "keywords": ["odds", "sports", "football", "basketball", "betting-lines", "asian-handicap", "scores"]
+}

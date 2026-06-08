@@ -1,0 +1,1 @@
+{"id":"evt_DEMO0001","sport":"football","league":{"id":"lg_DEMO","name":"Demo League"},"home_team":{"id":"tm_FR","name":"France"},"away_team":{"id":"tm_AR","name":"Argentina"},"scheduled_at":"2026-06-07T19:00:00Z","status":"live"}
