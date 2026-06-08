@@ -7,10 +7,12 @@ football & basketball odds + scores** — over the [InferSports](https://infersp
 Ask your agent things like:
 - *Who's favored in Brazil vs Argentina?* · *What's the score?* · *When do they kick off?*
 - *What's the sharp Asian handicap for Man City vs Arsenal?*
+- *What's worth watching today?* · *Give me a one-line preview of France vs Argentina* · *Where's the value on today's slate?*
 - *What games are on today?* · *Convert 2.08 decimal to Hong Kong odds* · *What was the Myanmar result?*
 
-Five bundled verbs (`today` · `match` · `line` · `convert` · `result`) — the agent picks a verb
-and passes arguments; each prints one concise line. The agent never hand-builds an API call.
+Eight bundled verbs (`today` · `digest` · `match` · `preview` · `line` · `scan` · `convert` · `result`) —
+the agent picks a verb and passes arguments; each prints one concise line (`digest` / `preview` / `scan`
+package several reads into one). The agent never hand-builds an API call.
 
 ---
 
@@ -58,8 +60,9 @@ public InferSports API at `https://api.infersports.dev`.
 - **Read-only & informational.** It reports odds, lines, scores, and results. It **never** places,
   recommends, or sizes a bet.
 - **Keyless Free tier** by default. Set `INFERSPORTS_API_KEY` (an `isk_…` key) to raise rate limits.
-- Wraps the **highest-frequency** reads. For value/arbitrage detection, opening-line movement,
-  per-book breakdowns, batch slate scans, or the bookmaker catalogue, see
+- Wraps the **highest-frequency** reads plus packaged scans (today's value top-N, today's highlights,
+  and a one-line pre-match brief). For per-fixture arbitrage, opening-line movement, full per-book
+  breakdowns, or the bookmaker catalogue, see
   [`plugins/infersports/skills/infersports/references/full-api.md`](plugins/infersports/skills/infersports/references/full-api.md)
   (the full REST docs + the MCP server). The MCP server is also one-line installable:
   `claude mcp add --transport http infersports https://api.infersports.dev/mcp`.

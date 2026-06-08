@@ -3,16 +3,17 @@
 A lightweight, **portable** Agent Skill wrapping the InferSports REST API — live football &
 basketball odds + scores for small-context / on-device agents. **Read-only, keyless.**
 
-Five verbs as bundled scripts — `today` / `match` / `line` / `convert` / `result` — the agent picks a
-verb and passes args; each prints one concise line. The agent never builds a URL. See `SKILL.md` for
-the full contract.
+Eight verbs as bundled scripts — `today` / `digest` / `match` / `preview` / `line` / `scan` /
+`convert` / `result` — the agent picks a verb and passes args; each prints one concise line
+(`digest` / `preview` / `scan` package several reads into one). The agent never builds a URL. See
+`SKILL.md` for the full contract.
 
 ## Layout
 - `SKILL.md` — the **agent-facing contract** (name + description always loaded; body read when a
   question matches).
 - `scripts/` — one bash script per verb + `_common.sh` (HTTP/config) + `_fmt.py` (concise formatter).
 - `references/full-api.md` — long-tail pointer (the full 14-tool MCP / REST surface) for asks beyond
-  the five verbs.
+  the eight verbs.
 - `fixtures/` — offline mock payloads (`INFERSPORTS_MOCK=1`).
 
 ## Install

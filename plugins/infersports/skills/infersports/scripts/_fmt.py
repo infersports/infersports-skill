@@ -92,6 +92,123 @@ def fmt_result(d, a):
         print(_result_line(d))
 
 
+_MKT = {"asian_handicap": "AH", "totals": "OU", "1x2": "1x2"}
+
+
+def _value_line(e):
+    bv = e.get("best_value") or {}
+    mt = bv.get("market_type", "")
+    line = bv.get("line")
+    if line is None:
+        lt = ""
+    elif mt == "asian_handicap":
+        lt = f" {line:+g}"  # handicaps carry a sign
+    else:
+        lt = f" {line:g}"   # totals line has no sign
+    st = e.get("status", "")
+    clk = e.get("clock")
+    tag = f"LIVE {clk}" if (st == "live" and clk) else st
+    edge = bv.get("edge_pct")
+    edge_s = f"+{round(float(edge), 1)}%" if edge is not None else "?"
+    return (
+        f"{e.get('event_id', '?')} | {e.get('home_team', '?')} v {e.get('away_team', '?')} | "
+        f"{bv.get('bookmaker', '?')} {_MKT.get(mt, mt or '?')}{lt} {bv.get('outcome', '?')} "
+        f"@{bv.get('price', '?')} | fair {bv.get('fair_price', '?')} | {edge_s}"
+        + (f" | {tag}" if tag else "")
+    )
+
+
+def fmt_scan(d, a):
+    # scan is value-first: show the fixtures carrying a +EV signal, top-N already capped server-side.
+    val = [e for e in d.get("entries", []) if e.get("best_value")]
+    print(f"Value scan {d.get('date', '?')} — {len(val)} shown (scanned {d.get('count', '?')})")
+    for e in val:
+        print(_value_line(e))
+    if not val:
+        print("no value at this threshold — lower --min-edge or widen --sport/--market.")
+    elif d.get("truncated"):
+        print(f"… top {a.limit or len(val)} only — narrow --sport/--market or raise --min-edge.")
+    if val:
+        print("Detection only — the edge is information, not a pick. The call is yours.")
+
+
+def _when(info, m):
+    if m.get("status") == "live":
+        sc = m.get("score") or {}
+        clk = m.get("clock")
+        return f"LIVE {sc.get('home', '?')}-{sc.get('away', '?')}" + (f" {clk}" if clk else "")
+    loc = info.get("scheduled_at_local")
+    if loc and len(loc) >= 16:
+        return f"kicks off {loc[11:16]}" + (f" {info.get('timezone')}" if info.get("timezone") else "")
+    utc = m.get("scheduled_at")
+    if utc and len(utc) >= 16:
+        return f"kicks off {utc[11:16]} UTC on {utc[5:10]}"
+    return ""
+
+
+def fmt_preview(d, a):
+    info = d.get("info") or {}
+    status = info.get("status")
+    if status != "ok":
+        print(info.get("summary") or f"not found: {info.get('query', '?')}")
+        if status == "ambiguous":
+            _alts(info, info.get("summary", ""))
+        return
+    m = info.get("match") or {}
+    bits = [f"{m.get('home_team', '?')} vs {m.get('away_team', '?')} —"]
+    fav = info.get("favorite")
+    if fav:
+        bits.append(f"{fav.get('team') or fav.get('outcome', '?')} favored ({pct(fav.get('win_probability'))})")
+    else:
+        bits.append("no clear favorite priced")
+    cmp = ((d.get("line") or {}).get("comparison")) or {}
+    cl = cmp.get("consensus_line")
+    if cl is not None:
+        bits.append(f"· AH {cl:+g}")
+    when = _when(info, m)
+    if when:
+        bits.append(f"· {when}")
+    print(" ".join(bits))
+
+
+def _digest_when(e):
+    if e.get("status") == "live":
+        sc = e.get("score") or {}
+        clk = e.get("clock")
+        return f"LIVE {sc.get('home', '?')}-{sc.get('away', '?')}" + (f" {clk}" if clk else "")
+    sa = e.get("scheduled_at") or ""
+    return f"{sa[11:16]} UTC" if len(sa) >= 16 else "time TBD"
+
+
+def _digest_key(e):
+    books = e.get("book_count") or 0
+    sa = e.get("scheduled_at") or "9999"
+    # live first (marquee = more books first); then soonest kickoff (marquee breaks ties).
+    return (0, -books, sa) if e.get("status") == "live" else (1, sa, -books)
+
+
+def fmt_digest(d, a):
+    entries = [e for e in d.get("entries", []) if e.get("status") != "finished"]
+    entries.sort(key=_digest_key)
+    n = a.limit or 6
+    top = entries[:n]
+    print(f"Worth watching today ({d.get('date', '?')}) — top {len(top)} of {len(entries)}")
+    for e in top:
+        bc = e.get("book_count", 0)
+        flag = " · value" if (e.get("value_count") or 0) > 0 else ""
+        fav = e.get("favorite")
+        fav_seg = ""
+        if fav:
+            who = fav.get("team") or fav.get("outcome", "")
+            fav_seg = f" | {who} {pct(fav.get('win_probability'))}"
+        print(
+            f"{e.get('event_id', '?')} | {e.get('home_team', '?')} v {e.get('away_team', '?')} | "
+            f"{_digest_when(e)}{fav_seg} | {bc} book{'' if bc == 1 else 's'}{flag}"
+        )
+    if len(entries) > n:
+        print(f"… {len(entries) - n} more on — raise --limit, or use today.sh for the full list.")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("verb")

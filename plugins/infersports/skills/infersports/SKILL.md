@@ -1,6 +1,6 @@
 ---
 name: infersports
-description: Live football & basketball odds and scores from InferSports — who's favored, the live score, today's matches, one normalized sharp betting line, odds-format conversion, and finished-match results. Use whenever the user asks about a match, the score, who's winning or favored, kickoff time, a betting line or Asian handicap, odds in another format, or a past result. Read-only; keyless, no account or API key needed.
+description: Live football & basketball odds and scores from InferSports — who's favored, the live score, today's matches and what's worth watching, a one-line pre-match brief, one normalized sharp betting line, today's value spots (where a book beats the sharp fair line), odds-format conversion, and finished-match results. Use whenever the user asks about a match, the score, who's winning or favored, kickoff time, what's on or worth watching today, a pre-match preview, a betting line or Asian handicap, where today's value/edges are, odds in another format, or a past result. Read-only; keyless, no account or API key needed.
 ---
 
 # InferSports odds & scores
@@ -22,19 +22,25 @@ verb and pass arguments. Each prints a compact, ready-to-read line. If a script 
 
 ## Report the numbers, never a pick (read-only)
 InferSports is **read-only and never recommends a bet — and neither do you when relaying it.** Give the
-line / score / odds exactly as the script printed them. Do **NOT** add a pick, lean, "best play",
-"value side", "edge", "I'd take…", or any betting suggestion — **even if the user asks "should I bet?"
-or "which bet?"** For those, give the data and a plain "the call is yours." The de-vigged *fair* vs
-*best* prices are information, not a recommendation; do not translate them into advice.
+line / score / odds / value exactly as the script printed them. Do **NOT** add a pick of your own, a
+lean, "best play", "I'd take…", or any betting suggestion — **even if the user asks "should I bet?" or
+"which bet?"** For those, give the data and a plain "the call is yours." `scan.sh` and `line.sh` surface
+where a book beats the sharp **de-vigged fair** line — that detected edge is *information* (detection
+only), so relay it as printed, but never turn it into advice or a recommended side.
 
-## The five verbs
-Run from this skill's directory. All read-only and safe to repeat.
+## The eight verbs
+Run from this skill's directory. All read-only and safe to repeat. Three **package several reads into one
+ready-to-read answer**: `preview.sh` (one-match brief), `digest.sh` (today's highlights) and `scan.sh`
+(today's value) — the fan-out happens for you; you get a capped, concise result.
 
 | The user asks… | Run |
 |---|---|
 | What games are on today? | `scripts/today.sh [--sport football\|basketball] [--status live\|scheduled\|finished] [--tz Asia/Shanghai] [--limit N]` |
+| What's worth watching today? / today's highlights | `scripts/digest.sh [--sport football\|basketball] [--limit N(<=12)] [--status live\|scheduled\|finished]` |
 | Who's favored? / What's the score? / When do they play? | `scripts/match.sh "<team, A vs B, or evt_… id>" [--tz Asia/Shanghai]` |
+| A quick pre-match brief (favored + sharp line + kickoff, one line) | `scripts/preview.sh "<team, A vs B, or evt_… id>" [--tz Asia/Shanghai] [--sport] [--date YYYY-MM-DD]` |
 | What's the sharp line / handicap? | `scripts/line.sh "<team, A vs B, or evt_… id>" [--market asian_handicap\|1x2\|totals] [--format hk\|malay\|…] [--sport] [--date YYYY-MM-DD]` |
+| Where's the value today? / today's edges | `scripts/scan.sh [--sport football\|basketball] [--market 1x2\|asian_handicap\|totals] [--min-edge PCT] [--limit N] [--status live\|scheduled\|finished]` |
 | Convert odds / explain a handicap | `scripts/convert.sh <value> <from> <to[,to2,…]>`  ·  `scripts/convert.sh --handicap -0.75` |
 | What was the score of a finished match? | `scripts/result.sh "<team>" [--date YYYY-MM-DD]`  ·  `scripts/result.sh --id evt_…` |
 
@@ -61,6 +67,19 @@ scripts/line.sh "Man City vs Arsenal" --format hk
 scripts/convert.sh 2.08 decimal hk,malay,american,probability
 # → decimal=2.08 hk=1.08 malay=-0.926 american=108 probability=0.4808
 
+scripts/digest.sh --sport football --limit 5
+# → Worth watching today (2026-06-08) — top 5 of 75
+#   evt_… | A v B | LIVE 1-0 1h 36 | 5 books · value
+#   evt_… | C v D | 13:00 UTC | 7 books
+
+scripts/preview.sh "France vs Argentina" --tz Europe/Paris
+# → France vs Argentina — France favored (84.0%) · AH -2.25 · kicks off 21:10 Europe/Paris
+
+scripts/scan.sh --sport football --market asian_handicap --min-edge 1 --limit 5
+# → Value scan 2026-06-08 — 5 shown (scanned 76)
+#   evt_… | A v B | sbobet AH -1 home @2.14 | fair 2.08 | +2.9% | scheduled
+#   Detection only — the edge is information, not a pick.
+
 scripts/today.sh --status live --sport football --limit 15
 scripts/result.sh "Myanmar" --date 2026-06-06
 ```
@@ -76,9 +95,10 @@ scripts/result.sh "Myanmar" --date 2026-06-06
   Do **not** web-search it or quote odds from another source — this skill speaks only for InferSports.
 
 ## What this skill does NOT do
-It wraps only the **highest-frequency** reads. For value/arbitrage detection, opening-line (初盘)
-movement, per-book breakdowns, batch slate scans, the bookmaker catalogue, or anything else, see
-[`references/full-api.md`](references/full-api.md) — the full REST docs and the 14-tool MCP server.
+It wraps the **highest-frequency** reads plus two packaged scans (`preview.sh`, `scan.sh`). For
+**arbitrage** detection, opening-line (初盘) movement, full **per-book** breakdowns, or the bookmaker
+catalogue, see [`references/full-api.md`](references/full-api.md) — the full REST docs and the 14-tool
+MCP server. (`scan.sh` already gives today's **value** top-N; the full API adds per-book depth and arb.)
 **InferSports is informational and read-only — it never places, recommends, or sizes a bet.**
 
 ## Config (all optional)

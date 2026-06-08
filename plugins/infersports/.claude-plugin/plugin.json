@@ -1,6 +1,6 @@
 {
   "name": "infersports",
-  "description": "Live Asian-priced football & basketball odds + scores over the InferSports REST API: who's favored, the score, today's matches, one sharp line, odds conversion, results. Read-only, keyless.",
+  "description": "Live Asian-priced football & basketball odds + scores over the InferSports REST API: who's favored, the live score, today's matches and what's worth watching, a one-line pre-match brief, one normalized sharp line, today's value spots, odds conversion, and results. Read-only, keyless.",
   "version": "1.0.0",
   "author": {
     "name": "InferSports",

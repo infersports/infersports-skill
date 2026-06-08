@@ -12,7 +12,7 @@
     {
       "name": "infersports",
       "source": "./plugins/infersports",
-      "description": "Live football & basketball odds + scores: who's favored, the live score, today's matches, one normalized sharp line, odds-format conversion, and finished-match results. Read-only, keyless — no account or API key."
+      "description": "Live football & basketball odds + scores: who's favored, the live score, today's matches and highlights, a one-line pre-match brief, one normalized sharp line, today's value spots, odds-format conversion, and finished-match results. Read-only, keyless — no account or API key."
     }
   ]
 }

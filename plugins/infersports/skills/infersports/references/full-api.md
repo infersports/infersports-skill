@@ -1,8 +1,8 @@
 # InferSports — full API (the long tail this skill doesn't wrap)
 
-The [`infersports`](../SKILL.md) skill wraps only the five highest-frequency verbs (today / match /
-line / convert / result). Everything below is the same read-only API — reach for it when a request
-falls outside those five.
+The [`infersports`](../SKILL.md) skill wraps the eight highest-frequency verbs (today / digest / match
+/ preview / line / scan / convert / result). Everything below is the same read-only API — reach for it
+when a request falls outside those eight.
 
 ## Two ways in
 - **REST** — base `https://api.infersports.dev`, keyless Free tier.
@@ -13,8 +13,9 @@ falls outside those five.
   (keyless Free tier, 14 tools).
 
 ## The full 14-tool surface — POST `/v1/mcp/<tool>`, JSON body
-**Wrapped by this skill already:** `list_today_matches` (today.sh), `match_info` (match.sh),
-`get_sharp_line` (line.sh), `convert/odds` + `convert/handicap`/`explain_handicap` (convert.sh),
+**Wrapped by this skill already:** `list_today_matches` (today.sh), `scan_slate` (scan.sh = today's
+value top-N; digest.sh = today's highlights), `match_info` (match.sh; also preview.sh), `get_sharp_line`
+(line.sh; also preview.sh), `convert/odds` + `convert/handicap`/`explain_handicap` (convert.sh),
 `list_results` + `get_result` / `GET /v1/results` (result.sh).
 
 **The long tail — call REST/MCP directly (NOT in this skill):**
@@ -22,9 +23,9 @@ falls outside those five.
 - `get_match_odds` — every quote for a match across books, in any odds format.
 - `compare_lines` — one market across books: best price per outcome, consensus line, per-book overround, de-vigged fair odds.
 - `get_opening_line` — each book's TRUE opening odds (初盘) paired with its current price = line movement. The Asian edge.
-- `find_value` — outcomes whose best price beats the sharp de-vigged fair line, with edge %. Detection only.
+- `find_value` — one fixture's outcomes that beat the sharp de-vigged fair line, with edge % (scan.sh covers the slate-wide top-N; this is the per-fixture deep dive). Detection only.
 - `find_arbitrage` — cross-book price inefficiencies + guaranteed margin % + which book holds each leg. Detection only.
-- `scan_slate` — the whole slate with each fixture's value/arb signal in ONE call (signal-first, capped). Heavy payload — keep it on a big-context host, not a small one.
+- `scan_slate` (raw) — the whole slate's per-fixture value/arb signal in ONE heavy payload; scan.sh/digest.sh already wrap the capped top-N, so reach here only for the full uncapped slate on a big-context host.
 - `list_bookmakers` — the bookmaker catalogue available on your tier.
 
 ## Conventions
