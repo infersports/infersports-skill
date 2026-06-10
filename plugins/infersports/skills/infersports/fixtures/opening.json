@@ -1,0 +1,70 @@
+{
+  "status": "ok",
+  "query": "France vs Argentina",
+  "summary": "France vs Argentina — opening lines for 4 book/market pairs.",
+  "match": {
+    "event_id": "evt_DEMO0001",
+    "sport": "football",
+    "league": "Demo League",
+    "home_team": "France",
+    "away_team": "Argentina",
+    "scheduled_at": "2026-06-07T19:00:00Z",
+    "status": "live",
+    "score": { "home": 1, "away": 0 },
+    "clock": "1h 23",
+    "summary": "France vs Argentina — LIVE 1h 23 1-0."
+  },
+  "lines": [
+    {
+      "bookmaker": "sbobet",
+      "market_type": "asian_handicap",
+      "period": "full_time",
+      "line": -0.75,
+      "handicap_components": [-0.5, -1.0],
+      "opening": { "home": 1.93, "away": 1.89 },
+      "current": { "home": 2.05, "away": 1.77 },
+      "current_line": -0.75,
+      "opened_at": "2026-06-05T09:12:40Z",
+      "format": "decimal"
+    },
+    {
+      "bookmaker": "crown",
+      "market_type": "asian_handicap",
+      "period": "full_time",
+      "line": -0.75,
+      "handicap_components": [-0.5, -1.0],
+      "opening": { "home": 1.9, "away": 1.92 },
+      "current": { "home": 2.02, "away": 1.8 },
+      "current_line": -0.75,
+      "opened_at": "2026-06-05T11:03:11Z",
+      "format": "decimal"
+    },
+    {
+      "bookmaker": "m8bet",
+      "market_type": "asian_handicap",
+      "period": "full_time",
+      "line": -0.5,
+      "handicap_components": [-0.5],
+      "opening": { "home": 1.72, "away": 2.1 },
+      "current": { "home": 1.84, "away": 1.98 },
+      "current_line": -0.5,
+      "opened_at": "2026-06-05T08:47:02Z",
+      "format": "decimal"
+    },
+    {
+      "bookmaker": "pinnacle",
+      "market_type": "asian_handicap",
+      "period": "full_time",
+      "line": -1.5,
+      "handicap_components": [-1.5],
+      "opening": { "home": 2.84, "away": 1.41 },
+      "current": { "home": 3.1, "away": 1.34 },
+      "current_line": -1.5,
+      "opened_at": "2026-06-05T08:30:55Z",
+      "format": "decimal"
+    }
+  ],
+  "as_of": "2026-06-07T20:23:00Z",
+  "stale": false,
+  "decision": { "status": "ok" }
+}

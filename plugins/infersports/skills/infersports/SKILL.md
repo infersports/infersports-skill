@@ -48,7 +48,7 @@ a capped, concise result.
 | What's on a specific day? / this Friday / June 12 in my timezone — or a competition ("World Cup games today?") | `scripts/events.sh --date YYYY-MM-DD [--tz Asia/Shanghai] [--sport football\|basketball] [--status live\|scheduled\|finished] [--league "World Cup"] [--limit N]` |
 | What's worth watching today? / today's highlights | `scripts/digest.sh [--sport football\|basketball] [--limit N(<=12)] [--status live\|scheduled\|finished]` |
 | Who's favored? / What's the score? / When do they play? | `scripts/match.sh "<team, A vs B, or evt_… id>" [--tz Asia/Shanghai]` |
-| A quick pre-match brief (favored + sharp line + kickoff, one line) | `scripts/preview.sh "<team, A vs B, or evt_… id>" [--tz Asia/Shanghai] [--sport] [--date YYYY-MM-DD]` |
+| Which team is stronger? / a quick one-line brief (pre-match: favored % + sharp line + kickoff; live: score + from-here % + the pre-match opening line) | `scripts/preview.sh "<team, A vs B, or evt_… id>" [--tz Asia/Shanghai] [--sport] [--date YYYY-MM-DD]` |
 | What's the sharp line / handicap? | `scripts/line.sh "<team, A vs B, or evt_… id>" [--market asian_handicap\|1x2\|totals] [--format hk\|malay\|…] [--sport] [--date YYYY-MM-DD]` |
 | What's the sharp **fair** (de-vigged) probability? / the reference to check a price against | `scripts/fair.sh "<team, A vs B, or evt_… id>" [--market 1x2\|asian_handicap\|totals] [--period] [--sport] [--date]` |
 | Is my Polymarket/Kalshi (external) price good? / is this prediction-market price fair? | `scripts/compare.sh "<team, A vs B, or evt_… id>" --prob <0..1> [--outcome home\|draw\|away\|over\|under] [--market 1x2\|asian_handicap\|totals] [--label polymarket]` |
@@ -70,6 +70,20 @@ a capped, concise result.
    `--league` takes a competition NAME (fuzzy — `--league "World Cup"` just works) or an `lg_…` id;
    an ambiguous name errors back with the candidate ids.
 
+## "Which team is stronger?" — strength from the odds
+For the watcher who wants a strength reference (casual, not a pick):
+- **Before kickoff** → `preview.sh "<fixture>"`: the favored side + de-vigged win % + the Asian
+  handicap. Read the AH line as plain language: 0 = evenly matched; ±0.25 a slight edge;
+  −0.5/−0.75 favored; −1 about a goal better; −1.5/−2 dominant; −2.5+ a class apart.
+- **LIVE** → in-play prices answer "who wins FROM HERE given the score and clock", NOT who is the
+  stronger team (a 0-0 deep in the second half makes the draw the "favorite"). `preview.sh` on a
+  live match therefore swaps the live line for `pre-match: <team> opened -N` — the opening line,
+  the strength reference from before kickoff. Answer with both: strength (the opening line, read
+  on the scale above) and the current situation (score + from-here %). Near full time books pull
+  the 1x2, so the from-here segment may be absent — the opening line still answers strength.
+- **The whole day at a glance** → `digest.sh` — each line already carries the favored team + win %.
+Strength is information, not advice — the no-pick rule above still applies.
+
 ## Examples
 ```
 scripts/match.sh "Brazil vs Argentina" --tz America/Sao_Paulo
@@ -89,6 +103,9 @@ scripts/digest.sh --sport football --limit 5
 
 scripts/preview.sh "France vs Argentina" --tz Europe/Paris
 # → France vs Argentina — France favored (84.0%) · AH -2.25 · kicks off 21:10 Europe/Paris
+
+scripts/preview.sh "SJK Seinajoki vs Inter Turku"     # live → strength comes from the OPENING line
+# → SJK Seinajoki vs Inter Turku — LIVE 1-1 ht · from here: draw 38.8% · pre-match: Inter Turku opened -0.5
 
 scripts/scan.sh --sport football --market asian_handicap --min-edge 1 --limit 5
 # → Value scan 2026-06-08 — 5 shown (scanned 76)

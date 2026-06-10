@@ -158,6 +158,41 @@ def _when(info, m):
     return ""
 
 
+def _opening_phrase(op, m):
+    """'pre-match: X opened -N' from get_opening_line — the strength reference for a live match.
+
+    Consensus = the most common opening AH line across books; ties go to the line whose opening
+    prices are most balanced (a full-ladder book's 'opening' can be an off-centre rung like
+    -1.5 @ 2.86/1.35 — the mode filters it out). Sign is normalised to a team name, so the reader
+    never needs to know that a positive line means the away side.
+    """
+    if not op or op.get("status") != "ok":
+        return None
+    lines = [
+        ln for ln in op.get("lines") or []
+        if ln.get("market_type") == "asian_handicap" and ln.get("period") == "full_time"
+        and ln.get("line") is not None and ln.get("opening")
+    ]
+    if not lines:
+        return None
+    counts = {}
+    for ln in lines:
+        counts[ln["line"]] = counts.get(ln["line"], 0) + 1
+    top = max(counts.values())
+
+    def balance(v):
+        return min(
+            abs((ln["opening"].get("home") or 0) - (ln["opening"].get("away") or 0))
+            for ln in lines if ln["line"] == v
+        )
+
+    line = sorted((v for v, c in counts.items() if c == top), key=balance)[0]
+    if line == 0:
+        return "pre-match: opened level (pick'em)"
+    who = m.get("home_team", "home") if line < 0 else m.get("away_team", "away")
+    return f"pre-match: {who} opened {-abs(line):+g}"
+
+
 def fmt_preview(d, a):
     info = d.get("info") or {}
     status = info.get("status")
@@ -169,6 +204,18 @@ def fmt_preview(d, a):
     m = info.get("match") or {}
     bits = [f"{m.get('home_team', '?')} vs {m.get('away_team', '?')} —"]
     fav = info.get("favorite")
+    if m.get("status") == "live":
+        # Live: score first; the % answers "who wins FROM HERE" (it prices the current score+clock,
+        # NOT team strength); strength = the pre-match opening line. Books pull the 1x2 near full
+        # time → no favorite → the from-here segment simply drops.
+        bits.append(_when(info, m))
+        if fav:
+            bits.append(f"· from here: {fav.get('team') or fav.get('outcome', '?')} {pct(fav.get('win_probability'))}")
+        opening = _opening_phrase(d.get("opening"), m)
+        if opening:
+            bits.append(f"· {opening}")
+        print(" ".join(bits))
+        return
     if fav:
         bits.append(f"{fav.get('team') or fav.get('outcome', '?')} favored ({pct(fav.get('win_probability'))})")
     else:

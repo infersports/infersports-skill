@@ -37,24 +37,36 @@ if date:base["date"]=date
 info=dict(base)
 if tz:info["timezone"]=tz
 ln=dict(base); ln.update(market_type="asian_handicap",period="full_time",verbosity="terse")
-print(json.dumps(info)); print(json.dumps(ln))' "$q" "$tz" "$sport" "$date")
-info_body="$(printf '%s\n' "$_bodies" | head -1)"
-line_body="$(printf '%s\n' "$_bodies" | tail -1)"
+op=dict(base); op.update(markets=["asian_handicap"],period="full_time")
+print(json.dumps(info)); print(json.dumps(ln)); print(json.dumps(op))' "$q" "$tz" "$sport" "$date")
+info_body="$(printf '%s\n' "$_bodies" | sed -n 1p)"
+line_body="$(printf '%s\n' "$_bodies" | sed -n 2p)"
+opening_body="$(printf '%s\n' "$_bodies" | sed -n 3p)"
 
 info_json=$(_call match POST /v1/mcp/match_info "$info_body") || exit 1
 
-# Sharp line is best-effort: only when the fixture resolved cleanly, and never fatal to the preview.
-line_json=""
-info_status=$(printf '%s' "$info_json" | python3 -c 'import json,sys
-try: print(json.load(sys.stdin).get("status",""))
+# Second read is best-effort and never fatal. Pre-match → the sharp CURRENT line. Live → the OPENING
+# line instead: in-play prices answer "who wins from here", so the strength reference is the line
+# from before kickoff (the formatter renders it as "pre-match: X opened -N").
+line_json="" opening_json=""
+_st=$(printf '%s' "$info_json" | python3 -c 'import json,sys
+try:
+    d=json.load(sys.stdin)
+    print(d.get("status","") + " " + ((d.get("match") or {}).get("status") or ""))
 except Exception: print("")' 2>/dev/null || echo "")
+info_status="${_st%% *}"; match_status="${_st#* }"
 if [ "$info_status" = "ok" ]; then
-  line_json=$(_call line POST /v1/mcp/get_sharp_line "$line_body" 2>/dev/null) || line_json=""
+  if [ "$match_status" = "live" ]; then
+    opening_json=$(_call opening POST /v1/mcp/get_opening_line "$opening_body" 2>/dev/null) || opening_json=""
+  else
+    line_json=$(_call line POST /v1/mcp/get_sharp_line "$line_body" 2>/dev/null) || line_json=""
+  fi
 fi
 
-# Merge the two payloads into one object for the formatter (line may be absent).
+# Merge the payloads into one object for the formatter (line/opening may be absent).
 python3 -c 'import json,sys
-info=json.loads(sys.argv[1])
-try: ln=json.loads(sys.argv[2])
-except Exception: ln=None
-print(json.dumps({"info":info,"line":ln}))' "$info_json" "${line_json:-}" | $FMT preview $detailed
+def load(s):
+    try: return json.loads(s)
+    except Exception: return None
+print(json.dumps({"info":json.loads(sys.argv[1]),"line":load(sys.argv[2]),"opening":load(sys.argv[3])}))' \
+  "$info_json" "${line_json:-}" "${opening_json:-}" | $FMT preview $detailed

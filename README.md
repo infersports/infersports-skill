@@ -10,7 +10,7 @@ Codex, OpenClaw, or any agent that can run a shell script.
 **Read-only · Keyless · 11 verbs · one line of output per answer**
 
 [![License](https://img.shields.io/github/license/infersports/infersports-skill)](LICENSE)
-[![Skill](https://img.shields.io/badge/skill-v1.1.2-1E2A24)](plugins/infersports/skills/infersports/SKILL.md)
+[![Skill](https://img.shields.io/badge/skill-v1.1.3-1E2A24)](plugins/infersports/skills/infersports/SKILL.md)
 [![MCP server](https://img.shields.io/badge/MCP%20server-16%20tools-E0683C)](https://api.infersports.dev/mcp)
 [![API docs](https://img.shields.io/badge/OpenAPI-api.infersports.dev-blue)](https://api.infersports.dev/docs)
 
@@ -114,7 +114,7 @@ The skill talks only to the public InferSports API at `https://api.infersports.d
 | `events` | a specific day's schedule, in *your* timezone | `events.sh --date 2026-06-12 --tz Asia/Shanghai --league "World Cup"` |
 | `digest` | today's highlights, ranked, top-N | `digest.sh --sport football --limit 5` |
 | `match` | score, favorite, kickoff for one match | `match.sh "Brazil vs Argentina"` |
-| `preview` | one-line pre-match brief (favored % + line + kickoff) | `preview.sh "France vs Argentina" --tz Europe/Paris` |
+| `preview` | one-line brief — pre-match: favored % + line; live: score + from-here % + the pre-match opening line ("which team is stronger?") | `preview.sh "France vs Argentina" --tz Europe/Paris` |
 | `line` | the sharp consensus line + best price, any odds format | `line.sh "Man City vs Arsenal" --format hk` |
 | `fair` | de-vigged fair probabilities (the sharp reference) | `fair.sh "France vs Argentina" --market 1x2` |
 | `compare` | judge an external (Polymarket/Kalshi) price vs fair | `compare.sh "France vs Argentina" --prob 0.52 --outcome home` |
