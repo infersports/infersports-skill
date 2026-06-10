@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # events.sh — the schedule for ONE specific day, CONCISE (one line per match, capped to protect context).
 # Usage: events.sh --date YYYY-MM-DD [--tz IANA_TZ] [--sport football|basketball]
-#                  [--status live|scheduled|finished] [--league lg_id] [--limit N(<=50)] [--detailed]
+#                  [--status live|scheduled|finished] [--league "name or lg_id"] [--limit N(<=50)] [--detailed]
+# --league takes a league NAME (fuzzy, e.g. "World Cup") or an lg_… id.
 # --date is REQUIRED. UTC is canonical: --date is a UTC day unless --tz is given, in which case the
 # day boundary (and each kickoff time shown) is that local zone — e.g. "June 12 in Asia/Shanghai".
 source "$(dirname "$0")/_common.sh"

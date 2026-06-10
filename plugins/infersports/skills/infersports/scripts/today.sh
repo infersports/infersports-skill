@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # today.sh — today's fixtures, CONCISE (one line per match, capped to protect small context windows).
 # Usage: today.sh [--sport football|basketball] [--status live|scheduled|finished]
-#                 [--league lg_id] [--tz IANA_TZ] [--limit N(<=50)] [--detailed]
+#                 [--league "name or lg_id"] [--tz IANA_TZ] [--limit N(<=50)] [--detailed]
+# --league takes a league NAME (fuzzy, e.g. "World Cup") or an lg_… id.
 source "$(dirname "$0")/_common.sh"
 
 sport= status= league= tz= limit=20 detailed=

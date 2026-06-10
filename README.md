@@ -10,7 +10,7 @@ Codex, OpenClaw, or any agent that can run a shell script.
 **Read-only · Keyless · 11 verbs · one line of output per answer**
 
 [![License](https://img.shields.io/github/license/infersports/infersports-skill)](LICENSE)
-[![Skill](https://img.shields.io/badge/skill-v1.1.0-1E2A24)](plugins/infersports/skills/infersports/SKILL.md)
+[![Skill](https://img.shields.io/badge/skill-v1.1.1-1E2A24)](plugins/infersports/skills/infersports/SKILL.md)
 [![MCP server](https://img.shields.io/badge/MCP%20server-16%20tools-E0683C)](https://api.infersports.dev/mcp)
 [![API docs](https://img.shields.io/badge/OpenAPI-api.infersports.dev-blue)](https://api.infersports.dev/docs)
 
@@ -110,8 +110,8 @@ The skill talks only to the public InferSports API at `https://api.infersports.d
 
 | Verb | Answers | Example |
 |---|---|---|
-| `today` | what's on today — live and scheduled, capped | `today.sh --status live --sport football --limit 15` |
-| `events` | a specific day's schedule, in *your* timezone | `events.sh --date 2026-06-12 --tz Asia/Shanghai` |
+| `today` | what's on today — live and scheduled, capped; filter a competition by name | `today.sh --league "World Cup"` |
+| `events` | a specific day's schedule, in *your* timezone | `events.sh --date 2026-06-12 --tz Asia/Shanghai --league "World Cup"` |
 | `digest` | today's highlights, ranked, top-N | `digest.sh --sport football --limit 5` |
 | `match` | score, favorite, kickoff for one match | `match.sh "Brazil vs Argentina"` |
 | `preview` | one-line pre-match brief (favored % + line + kickoff) | `preview.sh "France vs Argentina" --tz Europe/Paris` |

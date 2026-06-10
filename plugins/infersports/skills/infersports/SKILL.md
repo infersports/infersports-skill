@@ -36,8 +36,8 @@ a capped, concise result.
 
 | The user asks… | Run |
 |---|---|
-| What games are on today? | `scripts/today.sh [--sport football\|basketball] [--status live\|scheduled\|finished] [--tz Asia/Shanghai] [--limit N]` |
-| What's on a specific day? / this Friday / June 12 in my timezone | `scripts/events.sh --date YYYY-MM-DD [--tz Asia/Shanghai] [--sport football\|basketball] [--status live\|scheduled\|finished] [--limit N]` |
+| What games are on today? | `scripts/today.sh [--sport football\|basketball] [--status live\|scheduled\|finished] [--league "World Cup"] [--tz Asia/Shanghai] [--limit N]` |
+| What's on a specific day? / this Friday / June 12 in my timezone — or a competition ("World Cup games today?") | `scripts/events.sh --date YYYY-MM-DD [--tz Asia/Shanghai] [--sport football\|basketball] [--status live\|scheduled\|finished] [--league "World Cup"] [--limit N]` |
 | What's worth watching today? / today's highlights | `scripts/digest.sh [--sport football\|basketball] [--limit N(<=12)] [--status live\|scheduled\|finished]` |
 | Who's favored? / What's the score? / When do they play? | `scripts/match.sh "<team, A vs B, or evt_… id>" [--tz Asia/Shanghai]` |
 | A quick pre-match brief (favored + sharp line + kickoff, one line) | `scripts/preview.sh "<team, A vs B, or evt_… id>" [--tz Asia/Shanghai] [--sport] [--date YYYY-MM-DD]` |
@@ -59,6 +59,8 @@ a capped, concise result.
    query (e.g. `"Estonia vs Lithuania 2026-06-07"`) is understood too.
 3. `today.sh` is **capped** (default 20, max 50) so a busy weekend never floods your context. If you
    see "more exist", **narrow** with `--sport/--status/--league`, or jump straight to `match.sh "<team>"`.
+   `--league` takes a competition NAME (fuzzy — `--league "World Cup"` just works) or an `lg_…` id;
+   an ambiguous name errors back with the candidate ids.
 
 ## Examples
 ```
@@ -97,6 +99,7 @@ scripts/today.sh --status live --sport football --limit 15
 scripts/result.sh "Myanmar" --date 2026-06-06
 
 scripts/events.sh --date 2026-06-12 --tz Asia/Shanghai --sport football
+scripts/today.sh --league "World Cup"          # a competition by name — World Cup fixtures today
 # → Events 2026-06-12 (Asia/Shanghai) — 2 shown
 #   evt_… | Mexico vs South Africa — Kicks off 03:00 Asia/Shanghai on Jun 12.
 #   evt_… | Korea Republic vs Czechia — Kicks off 10:00 Asia/Shanghai on Jun 12.
