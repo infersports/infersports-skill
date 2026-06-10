@@ -18,23 +18,30 @@ Codex, OpenClaw, or any agent that can run a shell script.
 
 ---
 
+You ask in plain English; the agent picks a verb and relays one concise line back:
+
 ```console
+# "anything worth watching today?"
+$ scripts/digest.sh --sport football --limit 3
+Worth watching today (2026-06-12) — top 3 of 64
+  evt_… | Brazil vs Argentina    | LIVE 1-0 1h 36 | 5 books · value
+  evt_… | Mexico vs South Africa | 19:00 UTC      | 7 books
+  evt_… | Korea Rep. vs Czechia  | 10:00 UTC      | 6 books
+
+# "Polymarket has Mexico at 52¢ to beat South Africa — good price?"
+$ scripts/compare.sh "Mexico vs South Africa" --prob 0.52 --outcome home --label polymarket
+Mexico v South Africa — 1x2 home: sharp fair 55.6% vs polymarket 52.0% → +3.6pp (ROI +6.9%) · GOOD · de-vig pinnacle/power
+
+# "what's the score in the Brazil game?"
 $ scripts/match.sh "Brazil vs Argentina" --tz America/Sao_Paulo
 Brazil vs Argentina — LIVE 1h 12 1-0.
   favorite: Brazil (61.4%)
-
-$ scripts/fair.sh "France vs Argentina"
-France v Argentina — sharp fair (1x2): home 55.6% / draw 28.2% / away 22.5% · de-vig pinnacle
-
-$ scripts/compare.sh "France vs Argentina" --prob 0.52 --outcome home --label polymarket
-France v Argentina — 1x2 home: sharp fair 55.6% vs polymarket 52.0% → +3.6pp (ROI +6.9%) · GOOD
-
-$ scripts/convert.sh 2.08 decimal hk,malay,american,probability
-decimal=2.08 hk=1.08 malay=-0.926 american=108 probability=0.4808
 ```
 
-The agent picks a verb and passes arguments; each verb prints one concise,
-ready-to-read line. No account, no API key, no payment.
+No account, no API key, no payment. It serves two crowds equally well: people
+who just want to know what's worth watching tonight, and prediction-market
+traders (Polymarket, Kalshi) who want a sharp, de-vigged reference price before
+taking a side.
 
 ## Why this exists
 

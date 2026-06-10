@@ -70,7 +70,7 @@ scripts/line.sh "Man City vs Arsenal" --format hk
 # → Man City vs Arsenal — consensus AH home -0.5; best home 1.08 …; fair 1.99/2.01.
 
 scripts/convert.sh 2.08 decimal hk,malay,american,probability
-# → decimal=2.08 hk=1.08 malay=-0.926 american=108 probability=0.4808
+# → decimal=2.08 hk=1.08 malay=-0.93 american=108 probability=0.4808
 
 scripts/digest.sh --sport football --limit 5
 # → Worth watching today (2026-06-08) — top 5 of 75
