@@ -28,6 +28,14 @@ lean, "best play", "I'd take…", or any betting suggestion — **even if the us
 `compare.sh` surface where a price beats the sharp **de-vigged fair** line — that detected edge is
 *information* (detection only), so relay it as printed, but never turn it into advice or a recommended side.
 
+## Answer in the user's language
+Relay results in the language the user asked in — the scripts always print English; you translate the
+prose around the numbers. Keep VERBATIM: `evt_…`/`lg_…` ids, all numbers (odds, lines, probabilities,
+edges, scores), bookmaker names, and dates/times as printed. Team/league names: use the established
+name in the user's language only when you are confident (World Cup → 世界杯, Mexico → México); when
+unsure (obscure clubs, youth sides), keep the English name as printed — never invent a transliteration.
+Script arguments stay English: translate the user's team/league names to English before passing them.
+
 ## The eleven verbs
 Run from this skill's directory. All read-only and safe to repeat. Several **package several reads into one
 ready-to-read answer**: `preview.sh` (one-match brief), `digest.sh` (today's highlights), `scan.sh`
