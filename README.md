@@ -61,6 +61,15 @@ taking a side.
 
 ## Install
 
+### The one-liner (any agent)
+
+```text
+Read https://infersports.dev/skill.md and follow the instructions to connect to InferSports.
+```
+
+The agent fetches the guide and picks the right surface for its host — this skill,
+the remote MCP server, or plain REST. Prefer an exact recipe? Use one below.
+
 ### Claude Code — plugin (recommended)
 
 ```
@@ -164,6 +173,7 @@ Things the skill does that a thin API wrapper wouldn't:
 ```
 plugins/infersports/skills/infersports/
   SKILL.md          # the manifest the agent reads: verbs, rules, examples
+  VERSION           # release version — sent as User-Agent infersports-skill/<version>
   scripts/          # the 11 verbs + shared _common.sh / _fmt.py
   references/       # full-api.md — the complete REST + MCP surface
   fixtures/         # offline mock responses (INFERSPORTS_MOCK=1)
