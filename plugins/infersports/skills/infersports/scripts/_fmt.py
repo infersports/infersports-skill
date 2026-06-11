@@ -25,6 +25,8 @@ def fmt_today(d, a):
     for m in matches:
         line = m.get("summary") or f"{m.get('home_team', '?')} vs {m.get('away_team', '?')}"
         print(f"{m.get('event_id', '?')} | {line}")
+    if d.get("note"):
+        print(d["note"])
     if a.limit and len(matches) >= a.limit:
         print(f"… first {a.limit} only — more exist. Narrow with --sport/--status/--league, or use `match <team>`.")
 
@@ -32,7 +34,10 @@ def fmt_today(d, a):
 def fmt_events(d, a):
     matches = d.get("matches", [])
     tz = d.get("timezone")
-    head = f"{d.get('date', '?')}" + (f" ({tz})" if tz else " (UTC)")
+    head = f"{d.get('date', '?')}"
+    if d.get("date_to"):
+        head += f" → {d['date_to']}"
+    head += f" ({tz})" if tz else " (UTC)"
     print(f"Events {head} — {len(matches)} shown")
     for m in matches:
         line = m.get("summary") or f"{m.get('home_team', '?')} vs {m.get('away_team', '?')}"
@@ -42,6 +47,10 @@ def fmt_events(d, a):
 
 
 def _alts(d, shown=""):
+    # the BEST candidate rides in `match` (alternatives = the rest) — print it first or its id is lost
+    m = d.get("match") or {}
+    if m.get("event_id"):
+        print(f"  {m.get('event_id')} | {m.get('home_team', '?')} vs {m.get('away_team', '?')} (best match)")
     for alt in d.get("alternatives", []):
         print(f"  {alt.get('event_id', '?')} | {alt.get('label', '?')} ({alt.get('confidence', '?')})")
     au = d.get("ask_user")
@@ -96,6 +105,8 @@ def fmt_result(d, a):
         print(f"Results — {d.get('count', len(rs))} shown")
         for r in rs:
             print(_result_line(r))
+        if d.get("note"):
+            print(d["note"])
         if a.limit and len(rs) >= a.limit:
             print(f"… first {a.limit} only — narrow with --date/--team/--league.")
     elif d.get("status") == "not_found":
@@ -219,7 +230,12 @@ def fmt_preview(d, a):
     if fav:
         bits.append(f"{fav.get('team') or fav.get('outcome', '?')} favored ({pct(fav.get('win_probability'))})")
     else:
-        bits.append("no clear favorite priced")
+        probs = info.get("implied_probabilities") or {}
+        if probs.get("home") is not None and probs.get("away") is not None:
+            # priced but no favorite = a pick'em (server withholds the label on near-ties)
+            bits.append(f"evenly matched ({pct(probs['home'])} / {pct(probs['away'])})")
+        else:
+            bits.append("no clear favorite priced")
     cmp = ((d.get("line") or {}).get("comparison")) or {}
     cl = cmp.get("consensus_line")
     if cl is not None:
@@ -242,8 +258,9 @@ def _digest_when(e):
 def _digest_key(e):
     books = e.get("book_count") or 0
     sa = e.get("scheduled_at") or "9999"
-    # live first (marquee = more books first); then soonest kickoff (marquee breaks ties).
-    return (0, -books, sa) if e.get("status") == "live" else (1, sa, -books)
+    # live first, then marquee (book count = how much the market cares) — a 7-book World Cup
+    # fixture at 19:00 outranks a 1-book youth friendly at 09:00; kickoff breaks ties.
+    return (0 if e.get("status") == "live" else 1, -books, sa)
 
 
 def fmt_digest(d, a):

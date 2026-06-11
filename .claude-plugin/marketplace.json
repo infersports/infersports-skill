@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "InferSports skills — live Asian-priced football & basketball odds and scores, over a read-only keyless REST API.",
-    "version": "1.1.4"
+    "version": "1.1.5"
   },
   "plugins": [
     {

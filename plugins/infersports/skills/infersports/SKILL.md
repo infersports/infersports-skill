@@ -12,6 +12,13 @@ item) to stay cheap on a small context window; add `--detailed` for full JSON on
 **Scope: football and basketball only.** InferSports carries no other sport. A question about any other
 sport (baseball, tennis, …) has no answer here — say so; it is not a cue to look elsewhere.
 
+**Per-match markets only.** Every price is for ONE match (Asian handicap / totals / 1x2). There are
+NO outright/futures markets — no "who wins the World Cup", "to qualify from the group", "to advance",
+or season-winner odds. For those, say the data isn't carried here; do NOT stitch an answer together
+from single-match probabilities (group qualification depends on results you can't price). Tournament
+STRUCTURE (groups, brackets) isn't carried either — but a team's group-stage opponents fall out of a
+schedule range query (see the verb table).
+
 ## Golden rule (determinism)
 **Answer by running the bundled scripts below. Never fetch a URL yourself, never guess an endpoint,
 never hand-build an API call, and never web-search for a score, line, or result — this skill is the
@@ -45,7 +52,8 @@ a capped, concise result.
 | The user asks… | Run |
 |---|---|
 | What games are on today? | `scripts/today.sh [--sport football\|basketball] [--status live\|scheduled\|finished] [--league "World Cup"] [--tz Asia/Shanghai] [--limit N]` |
-| What's on a specific day? / this Friday / June 12 in my timezone — or a competition ("World Cup games today?") | `scripts/events.sh --date YYYY-MM-DD [--tz Asia/Shanghai] [--sport football\|basketball] [--status live\|scheduled\|finished] [--league "World Cup"] [--limit N]` |
+| What's on a specific day? / this Friday / June 12 in my timezone — or a competition ("World Cup games today?") | `scripts/events.sh --date YYYY-MM-DD [--to YYYY-MM-DD] [--tz Asia/Shanghai] [--sport football\|basketball] [--status live\|scheduled\|finished] [--league "World Cup"] [--limit N]` |
+| A whole schedule window — "all group-stage matches", "Argentina's remaining fixtures" | `scripts/events.sh --date YYYY-MM-DD --to YYYY-MM-DD --league "World Cup"` — ONE call (range inclusive, ≤31 days); never loop day-by-day. For one team, run the range then keep its lines. |
 | What's worth watching today? / today's highlights | `scripts/digest.sh [--sport football\|basketball] [--limit N(<=12)] [--status live\|scheduled\|finished]` |
 | Who's favored? / What's the score? / When do they play? | `scripts/match.sh "<team, A vs B, or evt_… id>" [--tz Asia/Shanghai]` |
 | Which team is stronger? / a quick one-line brief (pre-match: favored % + sharp line + kickoff; live: score + from-here % + the pre-match opening line) | `scripts/preview.sh "<team, A vs B, or evt_… id>" [--tz Asia/Shanghai] [--sport] [--date YYYY-MM-DD]` |
@@ -58,8 +66,10 @@ a capped, concise result.
 
 ## How to chain them (cheaply)
 1. Broad question ("what's on today?") → `today.sh`; a **specific day** ("what's on June 12?",
-   "this Friday") → `events.sh --date YYYY-MM-DD` (add `--tz` so the day is your local day, not UTC).
-   Both return **one line per match, capped**, each starting with an `evt_…` id.
+   "this Friday") → `events.sh --date YYYY-MM-DD` (add `--tz` so the day is your local day, not UTC);
+   a **multi-day window** ("the whole group stage", "next week's fixtures") → add `--to YYYY-MM-DD` —
+   one range call, never a per-day loop (tournament rounds cross UTC midnight, so a guessed loop
+   drops fixtures). All return **one line per match, capped**, each starting with an `evt_…` id.
 2. Drill into ONE match → `match.sh` (casual: score/favored) or `line.sh` (betting). Pass **either** the
    team name **or** the `evt_…` id straight from `today.sh` — both work (the id is resolved for you).
    If a *name* is ambiguous (senior vs U21, two same-day fixtures), pin it with `--date YYYY-MM-DD`
