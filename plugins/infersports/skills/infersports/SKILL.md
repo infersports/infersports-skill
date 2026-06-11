@@ -26,11 +26,13 @@ verb and pass arguments. Each prints a compact, ready-to-read line. If a script 
 
 ## Report the numbers, never a pick (read-only)
 InferSports is **read-only and never recommends a bet — and neither do you when relaying it.** Give the
-line / score / odds / value exactly as the script printed them. Do **NOT** add a pick of your own, a
+NUMBERS — line / score / odds / value — exactly as the script printed them; the sentence around them
+is yours, in the asker's language (next section). Do **NOT** add a pick of your own, a
 lean, "best play", "I'd take…", or any betting suggestion — **even if the user asks "should I bet?" or
 "which bet?"** For those, give the data and a plain "the call is yours." `scan.sh`, `line.sh` and
 `compare.sh` surface where a price beats the sharp **de-vigged fair** line — that detected edge is
-*information* (detection only), so relay it as printed, but never turn it into advice or a recommended side.
+*information* (detection only), so relay it faithfully (numbers verbatim), but never turn it into advice
+or a recommended side.
 
 ## Answer in the user's language
 Relay results in the language the user asked in — the scripts always print English; you translate the
