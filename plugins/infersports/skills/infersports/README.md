@@ -15,7 +15,7 @@ price against it. The agent never builds a URL. See `SKILL.md` for the full cont
   question matches).
 - `scripts/` — one bash script per verb + `_common.sh` (HTTP/config) + `_fmt.py` (concise formatter).
 - `references/full-api.md` — long-tail pointer (the full 16-tool MCP / REST surface) for asks beyond
-  the eleven verbs.
+  the twelve verbs.
 - `fixtures/` — offline mock payloads (`INFERSPORTS_MOCK=1`).
 
 ## Install

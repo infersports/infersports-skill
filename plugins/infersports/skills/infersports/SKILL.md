@@ -1,6 +1,6 @@
 ---
 name: infersports
-description: Live football & basketball odds and scores from InferSports — who's favored, the live score, today's matches and what's worth watching, a specific day's schedule (in your timezone), a one-line pre-match brief, one normalized sharp betting line, the sharp de-vigged fair probability, whether an external prediction-market (Polymarket/Kalshi) price is good vs that fair line, today's value spots (where a book beats the sharp fair line), odds-format conversion, and finished-match results. Use whenever the user asks about a match, the score, who's winning or favored, kickoff time, what's on or worth watching today, the fixtures on a specific day, a pre-match preview, a betting line or Asian handicap, the fair/de-vigged odds, whether a Polymarket/Kalshi price is fair or good, where today's value/edges are, odds in another format, or a past result. Read-only; keyless, no account or API key needed.
+description: Live football & basketball odds and scores from InferSports — who's favored, the live score, today's matches and what's worth watching, a specific day's schedule (in your timezone), a one-line pre-match brief, one normalized sharp betting line, the sharp de-vigged fair probability, the market-implied most likely scorelines, whether an external prediction-market (Polymarket/Kalshi) price is good vs that fair line, today's value spots (where a book beats the sharp fair line), odds-format conversion, and finished-match results. Use whenever the user asks about a match, the score, who's winning or favored, kickoff time, what's on or worth watching today, the fixtures on a specific day, a pre-match preview, a betting line or Asian handicap, the fair/de-vigged odds, the most likely score or correct-score probabilities, whether a Polymarket/Kalshi price is fair or good, where today's value/edges are, odds in another format, or a past result. Read-only; keyless, no account or API key needed.
 ---
 
 # InferSports odds & scores
@@ -42,7 +42,7 @@ name in the user's language only when you are confident (World Cup → 世界杯
 unsure (obscure clubs, youth sides), keep the English name as printed — never invent a transliteration.
 Script arguments stay English: translate the user's team/league names to English before passing them.
 
-## The eleven verbs
+## The twelve verbs
 Run from this skill's directory. All read-only and safe to repeat. Several **package several reads into one
 ready-to-read answer**: `preview.sh` (one-match brief), `digest.sh` (today's highlights), `scan.sh`
 (today's value) and `compare.sh` (judge an external price) — the fan-out / de-vig happens for you; you get
@@ -58,6 +58,7 @@ a capped, concise result.
 | Which team is stronger? / a quick one-line brief (pre-match: favored % + sharp line + kickoff; live: score + from-here % + the pre-match opening line) | `scripts/preview.sh "<team, A vs B, or evt_… id>" [--tz Asia/Shanghai] [--sport] [--date YYYY-MM-DD]` |
 | What's the sharp line / handicap? | `scripts/line.sh "<team, A vs B, or evt_… id>" [--market asian_handicap\|1x2\|totals] [--format hk\|malay\|…] [--sport] [--date YYYY-MM-DD]` |
 | What's the sharp **fair** (de-vigged) probability? / the reference to check a price against | `scripts/fair.sh "<team, A vs B, or evt_… id>" [--market 1x2\|asian_handicap\|totals] [--period] [--sport] [--date]` |
+| What's the most likely score? / correct-score probabilities | `scripts/scoreprob.sh "<team, A vs B, or evt_… id>" [--top N(1-10)] [--sport] [--date YYYY-MM-DD]` — market-implied scoreline distribution (football, one match) |
 | Is my Polymarket/Kalshi (external) price good? / is this prediction-market price fair? | `scripts/compare.sh "<team, A vs B, or evt_… id>" --prob <0..1> [--outcome home\|draw\|away\|over\|under] [--market 1x2\|asian_handicap\|totals] [--label polymarket]` |
 | Where's the value today? / today's edges | `scripts/scan.sh [--sport football\|basketball] [--market 1x2\|asian_handicap\|totals] [--min-edge PCT] [--limit N] [--status live\|scheduled\|finished]` |
 | Convert odds / explain a handicap | `scripts/convert.sh <value> <from> <to[,to2,…]>`  ·  `scripts/convert.sh --handicap -0.75` |

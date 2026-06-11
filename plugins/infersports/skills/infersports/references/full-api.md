@@ -1,8 +1,8 @@
 # InferSports — full API (the long tail this skill doesn't wrap)
 
-The [`infersports`](../SKILL.md) skill wraps the eleven highest-frequency verbs (today / events /
-digest / match / preview / line / fair / compare / scan / convert / result). Everything below is the
-same read-only API — reach for it when a request falls outside those eleven.
+The [`infersports`](../SKILL.md) skill wraps the twelve highest-frequency verbs (today / events /
+digest / match / preview / line / fair / scoreprob / compare / scan / convert / result). Everything below is the
+same read-only API — reach for it when a request falls outside those twelve.
 
 ## Two ways in
 - **REST** — base `https://api.infersports.dev`, keyless Free tier.
@@ -16,7 +16,7 @@ same read-only API — reach for it when a request falls outside those eleven.
 **Wrapped by this skill already:** `list_today_matches` (today.sh), `list_events` (events.sh = ONE
 specific day's schedule, timezone-aware), `scan_slate` (scan.sh = today's value top-N; digest.sh =
 today's highlights), `match_info` (match.sh; also preview.sh), `get_sharp_line` (line.sh; fair.sh =
-fair as probabilities; also preview.sh), `compare_prob` (compare.sh = judge an external/prediction-market
+fair as probabilities; also preview.sh), `score_prob` (scoreprob.sh = market-implied correct-score probabilities), `compare_prob` (compare.sh = judge an external/prediction-market
 price vs the sharp fair line), `convert/odds` + `convert/handicap`/`explain_handicap` (convert.sh),
 `list_results` + `get_result` / `GET /v1/results` (result.sh).
 

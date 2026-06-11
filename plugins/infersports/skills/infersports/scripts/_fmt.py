@@ -347,6 +347,28 @@ def fmt_fair(d, a):
     print(f"{head} — sharp fair ({_MKT.get(mt, mt)}{_line_tag(mt, comp.get('consensus_line'))}): {legs}{tail_s}")
 
 
+def fmt_scoreprob(d, a):
+    # market-implied correct-score distribution — the market's numbers, never a pick.
+    status = d.get("status")
+    if status != "ok":
+        print(d.get("summary") or status or "?")
+        if status == "ambiguous":
+            _alts(d, d.get("summary", ""))
+        return
+    m = d.get("match") or {}
+    head = f"{m.get('home_team', '?')} v {m.get('away_team', '?')}"
+    scores = " · ".join(f"{e['score']} {pct(e['prob'])}" for e in d.get("scores") or [])
+    cum = d.get("top_cum")
+    tail = []
+    if cum is not None:
+        tail.append(f"top {len(d.get('scores') or [])} = {pct(cum)} of all outcomes")
+    if d.get("fair_from"):
+        tail.append(f"from de-vig {d['fair_from']}")
+    if d.get("stale"):
+        tail.append("stale — confirm")
+    print(f"{head} — market-implied scores: {scores} ({'; '.join(tail)}). Market's distribution, not a pick.")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("verb")

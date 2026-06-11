@@ -7,10 +7,10 @@ Live Asian-priced football & basketball odds, scores, and de-vigged fair lines �
 packaged as an [Agent Skill](https://code.claude.com/docs/en/skills) for Claude Code,
 Codex, OpenClaw, or any agent that can run a shell script.
 
-**Read-only · Keyless · 11 verbs · one line of output per answer**
+**Read-only · Keyless · 12 verbs · one line of output per answer**
 
 [![License](https://img.shields.io/github/license/infersports/infersports-skill)](LICENSE)
-[![Skill](https://img.shields.io/badge/skill-v1.1.5-1E2A24)](plugins/infersports/skills/infersports/SKILL.md)
+[![Skill](https://img.shields.io/badge/skill-v1.2.0-1E2A24)](plugins/infersports/skills/infersports/SKILL.md)
 [![MCP server](https://img.shields.io/badge/MCP%20server-16%20tools-E0683C)](https://api.infersports.dev/mcp)
 [![API docs](https://img.shields.io/badge/OpenAPI-api.infersports.dev-blue)](https://api.infersports.dev/docs)
 
@@ -115,7 +115,7 @@ No git? Swap step 2 for: download **https://infersports.dev/skill.tgz** and extr
 **Requirements:** `bash`, `curl`, `python3` on PATH (already present on macOS/Linux).
 The skill talks only to the public InferSports API at `https://api.infersports.dev`.
 
-## The 11 verbs
+## The 12 verbs
 
 | Verb | Answers | Example |
 |---|---|---|
@@ -174,7 +174,7 @@ Things the skill does that a thin API wrapper wouldn't:
 plugins/infersports/skills/infersports/
   SKILL.md          # the manifest the agent reads: verbs, rules, examples
   VERSION           # release version — sent as User-Agent infersports-skill/<version>
-  scripts/          # the 11 verbs + shared _common.sh / _fmt.py
+  scripts/          # the 12 verbs + shared _common.sh / _fmt.py
   references/       # full-api.md — the complete REST + MCP surface
   fixtures/         # offline mock responses (INFERSPORTS_MOCK=1)
 ```

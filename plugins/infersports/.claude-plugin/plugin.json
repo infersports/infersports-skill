@@ -1,7 +1,7 @@
 {
   "name": "infersports",
   "description": "Live Asian-priced football & basketball odds + scores over the InferSports REST API: who's favored, the live score, today's matches and a specific day's schedule (timezone-aware), what's worth watching, a one-line pre-match brief, one normalized sharp line, the sharp de-vigged fair probability, whether a Polymarket/Kalshi price is good, today's value spots, odds conversion, and results. Read-only, keyless.",
-  "version": "1.1.5",
+  "version": "1.2.0",
   "author": {
     "name": "InferSports",
     "url": "https://infersports.dev"
@@ -9,5 +9,15 @@
   "homepage": "https://infersports.dev",
   "repository": "https://github.com/infersports/infersports-skill",
   "license": "MIT",
-  "keywords": ["odds", "sports", "football", "basketball", "betting-lines", "asian-handicap", "scores", "prediction-markets", "polymarket"]
+  "keywords": [
+    "odds",
+    "sports",
+    "football",
+    "basketball",
+    "betting-lines",
+    "asian-handicap",
+    "scores",
+    "prediction-markets",
+    "polymarket"
+  ]
 }
