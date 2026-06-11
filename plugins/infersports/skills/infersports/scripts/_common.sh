@@ -5,6 +5,9 @@ set -eo pipefail
 _SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 _SKILL_DIR="$(cd "$_SCRIPTS_DIR/.." && pwd)"
 API_BASE="${INFERSPORTS_API_BASE:-https://api.infersports.dev}"
+# Version lives in the VERSION file (one place, ships in the tarball) and is sent as the
+# User-Agent so the server can tell skill traffic — and which release — apart from bare curl.
+SKILL_VERSION="$(cat "$_SKILL_DIR/VERSION" 2>/dev/null || echo dev)"
 FMT="python3 $_SCRIPTS_DIR/_fmt.py"
 
 _die() {  # _die <message> [<fix>]
@@ -27,7 +30,7 @@ _call() {
     cat "$fx"; return 0
   fi
   local url="${API_BASE}${path}" resp http payload
-  local hdr=(-H "Accept: application/json")
+  local hdr=(-H "Accept: application/json" -A "infersports-skill/${SKILL_VERSION}")
   [ -n "${INFERSPORTS_API_KEY:-}" ] && hdr+=(-H "Authorization: Bearer ${INFERSPORTS_API_KEY}")
   if [ "$method" = "POST" ]; then
     resp=$(curl -sS -m 15 -w $'\n%{http_code}' -X POST "$url" -H "Content-Type: application/json" "${hdr[@]}" -d "$body") \

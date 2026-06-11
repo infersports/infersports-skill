@@ -10,7 +10,7 @@ Codex, OpenClaw, or any agent that can run a shell script.
 **Read-only · Keyless · 11 verbs · one line of output per answer**
 
 [![License](https://img.shields.io/github/license/infersports/infersports-skill)](LICENSE)
-[![Skill](https://img.shields.io/badge/skill-v1.1.3-1E2A24)](plugins/infersports/skills/infersports/SKILL.md)
+[![Skill](https://img.shields.io/badge/skill-v1.1.4-1E2A24)](plugins/infersports/skills/infersports/SKILL.md)
 [![MCP server](https://img.shields.io/badge/MCP%20server-16%20tools-E0683C)](https://api.infersports.dev/mcp)
 [![API docs](https://img.shields.io/badge/OpenAPI-api.infersports.dev-blue)](https://api.infersports.dev/docs)
 
