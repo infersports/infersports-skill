@@ -12,12 +12,9 @@ item) to stay cheap on a small context window; add `--detailed` for full JSON on
 **Scope: football and basketball only.** InferSports carries no other sport. A question about any other
 sport (baseball, tennis, …) has no answer here — say so; it is not a cue to look elsewhere.
 
-**Per-match markets only.** Every price is for ONE match (Asian handicap / totals / 1x2). There are
-NO outright/futures markets — no "who wins the World Cup", "to qualify from the group", "to advance",
-or season-winner odds. For those, say the data isn't carried here; do NOT stitch an answer together
-from single-match probabilities (group qualification depends on results you can't price). Tournament
-STRUCTURE (groups, brackets) isn't carried either — but a team's group-stage opponents fall out of a
-schedule range query (see the verb table).
+**Per-match markets only.** Every price is for ONE match (Asian handicap / totals / 1x2); there are
+no outright/futures markets (tournament winner, to-qualify) and no tournament structure (groups,
+brackets) — though a team's group-stage opponents fall out of a schedule range query (see the verb table).
 
 ## Golden rule (determinism)
 **Answer by running the bundled scripts below. Never fetch a URL yourself, never guess an endpoint,
