@@ -126,12 +126,13 @@ The skill talks only to the public InferSports API at `https://api.infersports.d
 | `preview` | one-line brief — pre-match: favored % + line; live: score + from-here % + the pre-match opening line ("which team is stronger?") | `preview.sh "France vs Argentina" --tz Europe/Paris` |
 | `line` | the sharp consensus line + best price, any odds format | `line.sh "Man City vs Arsenal" --format hk` |
 | `fair` | de-vigged fair probabilities (the sharp reference) | `fair.sh "France vs Argentina" --market 1x2` |
+| `scoreprob` | market-implied correct-score probabilities — the most likely scorelines, from the market itself | `scoreprob.sh "Korea vs Czechia" --top 3` |
 | `compare` | judge an external (Polymarket/Kalshi) price vs fair | `compare.sh "France vs Argentina" --prob 0.52 --outcome home` |
 | `scan` | today's value spots — where a book beats the fair line | `scan.sh --market asian_handicap --min-edge 1 --limit 5` |
 | `convert` | odds-format conversion + handicap explainer | `convert.sh 2.08 decimal hk,malay,american` · `convert.sh --handicap -0.75` |
 | `result` | finished-match score (30-day cache) | `result.sh "Myanmar" --date 2026-06-06` |
 
-`digest`, `preview`, `scan`, and `compare` are **packaged**: each folds several
+`digest`, `preview`, `scan`, `scoreprob`, and `compare` are **packaged**: each folds several
 API reads (and the de-vig math) into a single capped answer, so the agent doesn't
 burn context orchestrating the fan-out itself.
 
